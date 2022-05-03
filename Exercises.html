@@ -3,6 +3,7 @@
 
 <head>
   <!-- Basic -->
+  <link rel="icon" type="image/x-icon" href="favicon.png">
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <script src="echarts.min.js"></script>
@@ -22,6 +23,7 @@
 
   <title> Sensei </title>
 
+  <link rel="icon" type="image/x-icon" href="/images/favicon.png">
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
@@ -147,16 +149,76 @@
   </div>
   <section id="analysis">
     <div id="exerbgshift">
-      <h2 id="hpro12">Analysis</h2>
+      <br>
+      <h2 id="acard"></h2>
     </div>
     <div id="mainplot">
       <div id="map1" style="width: 1500px;height:600px;"></div>
       <div id="map2" style="width: 1500px;height:600px;"></div>
     </div>
+    <div id="stats2">
+      <div id="stats">
+        <div id="st1" class="hprog"></div>
+        <div id="st2" class="hprog"></div>
+        
+      </div>
+      <div id="stats3">
+        <div id="st3" class="hprog"></div>
+        <div id="st4" class="hprog"></div>
+        
+      </div>
+    </div>
+    
     
   </section>
 
   <style>
+    #map1{
+      background-color:#2c343c ;
+    }
+    #map2{
+      background-color:#2c343c ;
+    }
+    #stats2{
+      background-color:#2c343c ;
+
+      height: 400px;
+      width: 100%;
+    }
+    #st3{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100px;
+      
+    }
+
+    #stats{
+      background-color:#2c343c ;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 200px;
+      width: 100%;
+      
+
+    }
+    #stats3{
+      background-color:#2c343c ;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 100px;
+      width: 100%;
+      
+
+    }
+    #acard{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color:aliceblue;
+    }
     #mainplot{
       display: flex;
       justify-items: center;
@@ -250,7 +312,6 @@ h4{
     content: '';
     /* background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000); */
     background: linear-gradient(60deg, #48ff00,#c3f21a, #00ffd5, #002bff, #0077ff,#48ff00);
-
     position: absolute;
     top: -2px;
     left:-2px;
@@ -266,7 +327,7 @@ h4{
 }
 #exerbgshift{
   width:100%;
-  height:200px;
+  height:150px;
   background: linear-gradient(180deg, #0e0e0e, #2c343c);
 
 }
@@ -274,7 +335,6 @@ h4{
     content: '';
     /* background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000); */
     background: linear-gradient(45deg, #ff0000, #ff7b00,#ff0000);
-
     position: absolute;
     top: -2px;
     left:-2px;
@@ -346,8 +406,7 @@ h4{
       padding-left: 10px;
       padding-right: 10px;
       display: flex;
-
-      height: 675px;
+      height: 619px;
       display: flex;
       /* flex-direction: row; */
       /* justify-content: center; */
@@ -367,7 +426,7 @@ h4{
       /* display: flex;
       flex-direction: row-reverse; */
       width: 40px;
-      height:675px;
+      height:619px;
       background-color: rgb(39, 240, 17);
     }
     #landmark-grid-container{
@@ -382,8 +441,8 @@ h4{
     }
     .output_canvas{
       background-color: #000;
-      height:675px;
-      width:1200px;
+      height:619px;
+      width:1100px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -459,11 +518,16 @@ graph.setOption(option);
   function main(){  
     var btn=document.querySelector('#btn');
     var rep_track=[];
+    var repsum=0;
+    var calibrate=1;
+    var repcount=[];
     var set_track=[];
+    var trepsum=0;
     var exi=0;
     var tts= window.speechSynthesis;
     var count=0;
     var cflag=-1;
+    var shouldererror=0;
     var today=new Date();
     console.log("exi==0",exi," ",today);
     
@@ -483,14 +547,14 @@ graph.setOption(option);
       const grid = new LandmarkGrid(landmarkContainer);
 
       var upflag=-1;
+
+      var temp=0;
       var downflag=-1;
 
       var rep=0;
       var countup=0;
-      
-
-      
-
+      var repsum=0;
+      var dict={};
     
       var countdown=0;
       var scount=0;
@@ -504,11 +568,13 @@ graph.setOption(option);
       
       btn2.addEventListener('click',()=>{
         var today2=new Date();
-        end_tsecs=((today2.getMinutes())*60)+today2.getSeconds();
+        end_tsecs=((today2.getMinutes())*60)+((today.getHours())*3600)+today2.getSeconds();
         tsecs=end_tsecs-total_secs_start;
         console.log("tsecs"+tsecs+" cf"+cflag+" count "+count+" start sec "+total_secs_start+" end sec  "+end_tsecs);
         // camera.close();
-        exi=1;
+        exi++;
+        cflag=-1;
+        calibrate=0;
         
 
       })
@@ -568,8 +634,36 @@ graph.setOption(option);
           grid.updateLandmarks([]);
           return;
         }
+        
         if(exi==1){
+          document.getElementById("acard").innerHTML="Analysis";
+          document.getElementById("st1").innerHTML="Errors during Session: "+shouldererror;
+          document.getElementById("st2").innerHTML="Totals reps: "+rep;
+          document.getElementById("st3").innerHTML="Time Taken: "+tsecs+" seconds";
           
+
+
+          cflag=-1;
+          temp=Math.trunc(rep/5);
+          document.getElementById("st4").innerHTML="Totals Sets (5 reps) : "+temp;
+            console.log("im in"+temp);
+            for(var i=0;i<temp;i++){
+              trepsum=0;
+              for(var j=0;j<5;j++){
+                if(j+i*5==0){
+                  trepsum=trepsum+rep_track[j+i*5]-rep_track[0];
+                }
+                else{
+                  trepsum=trepsum+rep_track[j+i*5];
+                }
+              }
+             
+              set_track.push({"value":trepsum,"name":"Set Number: "+(i+1)});
+
+            }
+
+
+          console.log(" "+rep_track+" "+repcount);
           dt=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
           var graph = echarts.init(document.getElementById('map1'));
           option = {
@@ -582,28 +676,29 @@ graph.setOption(option);
                           alignWithLabel: true
                       },
 
-                      data: dt
+                      data: repcount.slice(1),
                   }
               ],
               yAxis: [
+                  
                   {
-                      type: 'value', name: 'Temprature', min: 0, max: 25, position: 'right',
-                      axisLabel: { formatter: '{value} °C' }
+                      type: 'value', name: 'Rep Time', min: 0, max: 100, position: 'right',
+                      axisLabel: { formatter: '{value} second' }
                   },
                   {
-                      type: 'value', name: 'Precipitation', min: 0, max: 250, position: 'left',
-                      axisLabel: { formatter: '{value} ml' }
+                      type: 'value', name: 'Rep Time', min: 0, max: 100, position: 'left',
+                      axisLabel: { formatter: '{value}' }
                   }
               ],
               series: [
+                  // {
+                  //     name: 'Evaporation', type: 'bar', yAxisIndex: 0, data: [0.3, 0.6, 1, 2.4, 2.5, 7.6, 13.5]
+                  // },
                   {
-                      name: 'Evaporation', type: 'bar', yAxisIndex: 0, data: [0.3, 0.6, 1, 2.4, 2.5, 7.6, 13.5]
+                      name: 'time per rep', type: 'bar', smooth: true, yAxisIndex: 1, data:rep_track.slice(1)
                   },
                   {
-                      name: 'Precipitation', type: 'bar', smooth: true, yAxisIndex: 1, data: [4, 7, 14, 28, 30, 68, 175]
-                  },
-                  {
-                      name: 'Temprature', type: 'line', smooth: false, data: [2.1, 2.3, 3, 3.8, 6, 10.3, 20.4, 23]
+                      name: 'time per rep', type: 'line', smooth: false, data: rep_track.slice(1)
                   }
               ]
           };
@@ -642,13 +737,7 @@ option2 = {
       type: 'pie',
       radius: '55%',
       center: ['50%', '50%'],
-      data: [
-        { value: 335, name: 'Direct' },
-        { value: 310, name: 'Email' },
-        { value: 274, name: 'Union Ads' },
-        { value: 235, name: 'Video Ads' },
-        { value: 400, name: 'Search Engine' }
-      ].sort(function (a, b) {
+      data: set_track.sort(function (a, b) {
         return a.value - b.value;
       }),
       roseType: 'radius',
@@ -680,7 +769,7 @@ option2 = {
 
 graph2.setOption(option2);
 
-
+exi++;
 
 
         }
@@ -713,13 +802,14 @@ graph2.setOption(option2);
         let pirn="";
         let shoulder=calcangle(results.poseLandmarks[11],results.poseLandmarks[12],results.poseLandmarks[14]);
         let pin=calcangle(results.poseLandmarks[12],results.poseLandmarks[14],results.poseLandmarks[16]);
+        if(calibrate==1){
         document.getElementById("text").innerHTML = Math.trunc(pin);
-        
+        }
         // console.log("Final Check "+shoulder);
 
         if(pin>165){
           count++;
-          if(cflag==-1){
+          if(cflag==-1&&calibrate==1){
             
             document.getElementById("text2").innerHTML = "Calibrating " + (count/4)+" %";
             document.getElementById("text2").style.color="blue";
@@ -729,7 +819,7 @@ graph2.setOption(option2);
           }
         }
   
-        if(count%400==0&&cflag==-1&&count!=0){
+        if(count%400==0&&cflag==-1&&count!=0&&calibrate==1){
           cflag=0;
           document.getElementById("text2").innerHTML = "Yes";
           document.getElementById("text2").style.color="green";
@@ -749,7 +839,7 @@ graph2.setOption(option2);
           cflag=0;//down
         }
         if(cflag!=-1&&tsecs==-1){
-          total_secs_start=((today.getMinutes())*60)+today.getSeconds();
+          total_secs_start=((today.getMinutes())*60)+((today.getHours())*3600)+today.getSeconds();
           tsecs=0;
           console.log("hello"+total_secs_start);
         }
@@ -762,20 +852,34 @@ graph2.setOption(option2);
           
           // upflag=0;
           // downflag=0;
+          var today21=new Date();
+          var end_tsecs2=(((today21.getHours())*3600)+(today21.getMinutes())*60)+today21.getSeconds();
           cflag=1;
+          rep_track[0]=end_tsecs2-total_secs_start;
+          repcount[0]=0;
           rep++;
-          // rep_track[rep]=
+          repsum=repsum+rep_track[rep-1];
+          
+          var tsecs2=end_tsecs2-total_secs_start-repsum;
+          
+
+          
+        // console.log("tsecs"+tsecs+" cf"+cflag+" count "+count+" start sec "+total_secs_start+" end sec  "+end_tsecs);
+
+          
+          repcount[rep]=rep;
+          rep_track[rep]=tsecs2;
           document.getElementById("rep").innerHTML = Math.trunc(rep);
           
         }
 
         if(shoulder>120 && cflag!=-1 &&scount%100==0){
+          shouldererror++;
           var tos = new SpeechSynthesisUtterance("Please bring your Arms Closer to your Waist");
           tts.speak(tos);
-        }
-        if(exi==1){
           
         }
+      
       }
     
       const pose = new Pose({locateFile: (file) => {
@@ -786,8 +890,8 @@ graph2.setOption(option2);
         smoothLandmarks: true,
         enableSegmentation: true,
         smoothSegmentation: true,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5
+        minDetectionConfidence: 0.8,
+        minTrackingConfidence: 0.8
       });
       pose.onResults(onResults);
       
