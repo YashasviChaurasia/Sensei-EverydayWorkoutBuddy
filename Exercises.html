@@ -5,6 +5,7 @@
   <!-- Basic -->
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <script src="echarts.min.js"></script>
   <!-- Mobile Metas -->
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <!-- Site Metas -->
@@ -127,7 +128,7 @@
         <div class="landmark-grid-container"></div>
 
         <div>
-          <a><button id="btn2"><h2><strong class="hpro1">End</strong></h2></button></a>
+          <a href="#analysis"><button id="btn2"><h2><strong class="hpro1">End</strong></h2></button></a>
         </div>
         <div id="bo">
           <br><h5 class="hpro" >Calibrated : <strong class="hpro12" id="text2">NO</strong></h5>
@@ -144,8 +145,24 @@
     </div>
 
   </div>
+  <section id="analysis">
+    <div id="exerbgshift">
+      <h2 id="hpro12">Analysis</h2>
+    </div>
+    <div id="mainplot">
+      <div id="map1" style="width: 1500px;height:600px;"></div>
+      <div id="map2" style="width: 1500px;height:600px;"></div>
+    </div>
+    
+  </section>
 
   <style>
+    #mainplot{
+      display: flex;
+      justify-items: center;
+      align-items: center;
+
+    }
     html{
       scroll-behavior: smooth;
     }
@@ -175,7 +192,7 @@
   align-items: center;
 }
 body{
-  background-color: rgb(14, 14, 14);
+  background-color: #0e0e0e;
 }
 .heading_container{
   display:flex;
@@ -246,6 +263,12 @@ h4{
     opacity: 0;
     transition: opacity .3s ease-in-out;
     border-radius: 0px;
+}
+#exerbgshift{
+  width:100%;
+  height:200px;
+  background: linear-gradient(180deg, #0e0e0e, #2c343c);
+
 }
 #btn2:before {
     content: '';
@@ -341,8 +364,6 @@ h4{
       background-color: rgb(0, 0, 0);
     }
     #myBar2 {
-      
-
       /* display: flex;
       flex-direction: row-reverse; */
       width: 40px;
@@ -393,16 +414,58 @@ h4{
 </body>
 
 </html>
-<script type="module">
+<!-- <script>
+  var graph = echarts.init(document.getElementById('main'));
+  option = {
+      legend: {},
+      xAxis: [
+          {
+              type: 'category',
+              axisTick: {
+                  alignWithLabel: true
+              },
+
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          }
+      ],
+      yAxis: [
+          {
+              type: 'value', name: 'Temprature', min: 0, max: 25, position: 'right',
+              axisLabel: { formatter: '{value} °C' }
+          },
+          {
+              type: 'value', name: 'Precipitation', min: 0, max: 250, position: 'left',
+              axisLabel: { formatter: '{value} ml' }
+          }
+      ],
+      series: [
+          {
+              name: 'Evaporation', type: 'bar', yAxisIndex: 0, data: [0.3, 0.6, 1, 2.4, 2.5, 7.6, 13.5]
+          },
+          {
+              name: 'Precipitation', type: 'bar', smooth: true, yAxisIndex: 1, data: [4, 7, 14, 28, 30, 68, 175]
+          },
+          {
+              name: 'Temprature', type: 'line', smooth: false, data: [2.1, 2.3, 3, 3.8, 6, 10.3, 20.4, 23]
+          }
+      ]
+  };
+graph.setOption(option);
+</script> -->
+<script>
+  // import * as echarts from 'echarts';
+
 
   function main(){  
     var btn=document.querySelector('#btn');
+    var rep_track=[];
+    var set_track=[];
     var exi=0;
     var tts= window.speechSynthesis;
     var count=0;
     var cflag=-1;
     var today=new Date();
-    console.log("exi==0",exi);
+    console.log("exi==0",exi," ",today);
     
     btn.addEventListener('click',()=>{
       // trigger the exercise with a start button on the same page and then 
@@ -446,7 +509,7 @@ h4{
         console.log("tsecs"+tsecs+" cf"+cflag+" count "+count+" start sec "+total_secs_start+" end sec  "+end_tsecs);
         // camera.close();
         exi=1;
-        console.log(exi);
+        
 
       })
 
@@ -505,7 +568,122 @@ h4{
           grid.updateLandmarks([]);
           return;
         }
-        
+        if(exi==1){
+          
+          dt=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+          var graph = echarts.init(document.getElementById('map1'));
+          option = {
+              backgroundColor:'#2c343c',
+              legend: {},
+              xAxis: [
+                  {
+                      type: 'category',
+                      axisTick: {
+                          alignWithLabel: true
+                      },
+
+                      data: dt
+                  }
+              ],
+              yAxis: [
+                  {
+                      type: 'value', name: 'Temprature', min: 0, max: 25, position: 'right',
+                      axisLabel: { formatter: '{value} °C' }
+                  },
+                  {
+                      type: 'value', name: 'Precipitation', min: 0, max: 250, position: 'left',
+                      axisLabel: { formatter: '{value} ml' }
+                  }
+              ],
+              series: [
+                  {
+                      name: 'Evaporation', type: 'bar', yAxisIndex: 0, data: [0.3, 0.6, 1, 2.4, 2.5, 7.6, 13.5]
+                  },
+                  {
+                      name: 'Precipitation', type: 'bar', smooth: true, yAxisIndex: 1, data: [4, 7, 14, 28, 30, 68, 175]
+                  },
+                  {
+                      name: 'Temprature', type: 'line', smooth: false, data: [2.1, 2.3, 3, 3.8, 6, 10.3, 20.4, 23]
+                  }
+              ]
+          };
+
+
+          graph.setOption(option);
+
+          var graph2 = echarts.init(document.getElementById('map2'));
+//           var chartDom = document.getElementById('map2');
+// var myChart = echarts.init(chartDom);
+// var option2;
+option2 = {
+  backgroundColor: '#2c343c',
+  title: {
+    text: 'Rep Time per Set',
+    left: 'center',
+    top: 20,
+    textStyle: {
+      color: '#ccc'
+    }
+  },
+  tooltip: {
+    trigger: 'item'
+  },
+  visualMap: {
+    show: false,
+    min: 80,
+    max: 600,
+    inRange: {
+      colorLightness: [0, 1]
+    }
+  },
+  series: [
+    {
+      name: 'Access From',
+      type: 'pie',
+      radius: '55%',
+      center: ['50%', '50%'],
+      data: [
+        { value: 335, name: 'Direct' },
+        { value: 310, name: 'Email' },
+        { value: 274, name: 'Union Ads' },
+        { value: 235, name: 'Video Ads' },
+        { value: 400, name: 'Search Engine' }
+      ].sort(function (a, b) {
+        return a.value - b.value;
+      }),
+      roseType: 'radius',
+      label: {
+        color: 'rgba(255, 255, 255, 0.3)'
+      },
+      labelLine: {
+        lineStyle: {
+          color: 'rgba(255, 255, 255, 0.3)'
+        },
+        smooth: 0.2,
+        length: 10,
+        length2: 20
+      },
+      itemStyle: {
+        color: '#c23531',
+        shadowBlur: 200,
+        shadowColor: 'rgba(0, 0, 0, 0.5)'
+      }
+      ,animationDuration:1000,
+      animationType: 'scale',
+      animationEasing: 'elasticOut',
+      // animationDelay: function (idx) {
+      //   return Math.random() * 200;
+      // }
+    }
+  ]
+};
+
+graph2.setOption(option2);
+
+
+
+
+        }
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         // canvasCtx.drawImage(results.segmentationMask, 0, 0,
@@ -562,6 +740,7 @@ h4{
 
 
         }
+        
         if(shoulder>120 && cflag!=-1){
           scount++;
         }
@@ -585,6 +764,7 @@ h4{
           // downflag=0;
           cflag=1;
           rep++;
+          // rep_track[rep]=
           document.getElementById("rep").innerHTML = Math.trunc(rep);
           
         }
@@ -592,6 +772,9 @@ h4{
         if(shoulder>120 && cflag!=-1 &&scount%100==0){
           var tos = new SpeechSynthesisUtterance("Please bring your Arms Closer to your Waist");
           tts.speak(tos);
+        }
+        if(exi==1){
+          
         }
       }
     
@@ -617,6 +800,7 @@ h4{
       });
       camera.start();
       console.log("end o after cam")
+      
       
     })
     console.log("exiiii"+exi);
