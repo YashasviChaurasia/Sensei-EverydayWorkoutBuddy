@@ -14,12 +14,20 @@ h3,h4,h5 {
 .hpro{
   color: #ffffff;
 }
+.hprog{
+  padding: 10px;
+  color: #acacac;
+  font-family: 'Russo One', sans-serif;
+  font-size: xx-large;
+}
 .hpro1{
   color: #b61b1b;
 }
 .hpro12{
-  font-size: large;
+  font-size: xx-large;
+  padding: 10px;
   color: #eb0b0b;
+  font-family: 'Russo One', sans-serif;
 }
 .layout_padding {
   padding: 90px 0;
