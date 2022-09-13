@@ -128,7 +128,10 @@ a:focus {
 .sub_page .hero_area {
   min-height: auto;
 }
-
+.col-md-6{
+  display: flex;
+  justify-content:center;
+}
 .sub_page .product_section {
   padding: 90px 0;
   background: #02122e;
