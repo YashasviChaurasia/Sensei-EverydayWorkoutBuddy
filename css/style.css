@@ -299,7 +299,21 @@ a:focus {
 .slider_section .container {
   padding: 0 25px;
 }
+/* .container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 25px;
+} */
 
+#condev{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 25px;
+}
 .slider_section #customCarousel1 {
   width: 100%;
   position: unset;
